@@ -1,9 +1,10 @@
 ﻿#include <iostream>
 #include <string>
 #include <Windows.h>
-//nokiax caesar cipher encode/decode program v1.42
+//nokiax caesar cipher encode/decode program v1.42.1
 //TODO:优化代码
 //support:自动符号数字分离 符号原样输出 大小写自动分离移动
+//latest edit:将err检测的if改为switch
 using namespace std;
 int encrypt(string msg, int mvb)
 {
@@ -25,7 +26,7 @@ int encrypt(string msg, int mvb)
 		//cout << tbr << endl;
 		//cout << (int)(tbr) << endl;
 		//cout << (int)(tbr + mvb) << endl;
-		if ( ((int)(tbr) < 65) || ((int)(tbr) > 90) && ((int)(tbr) <97) || ((int)(tbr) >122)  )
+		if (((int)(tbr) < 65) || ((int)(tbr) > 90) && ((int)(tbr) <97) || ((int)(tbr) >122))
 		{
 			cout << tbr;
 		}
@@ -49,12 +50,12 @@ int encrypt(string msg, int mvb)
 			if (((int)(tbr) > 64) && ((int)(tbr) < 91))
 			{
 				//cout << "uppercase" << endl;
-				if ( (int)(tbr + mvb) > 90 )
+				if ((int)(tbr + mvb) > 90)
 				{
 					errflag = 3;
 					cout << (char)((int)(tbr + mvb - 26));
 				}
-				if ((int)(tbr + mvb) < 65 )
+				if ((int)(tbr + mvb) < 65)
 				{
 					errflag = 4;
 					cout << (char)((int)(tbr + mvb + 26));
@@ -68,22 +69,15 @@ int encrypt(string msg, int mvb)
 		}
 	}
 	cout << "|" << endl;
-	if (errflag == 1)
+
+	switch (errflag)
 	{
-		cout << "WARN:overflow! char z returned to a!" << endl;
+	case 1:cout << "WARN:overflow! char z returned to a!" << endl; break;
+	case 2:cout << "WARN:overflow! char a returned to z!" << endl; break;
+	case 3:cout << "WARN:overflow! char Z returned to A!" << endl; break;
+	case 4:cout << "WARN:overflow! char A returned to Z!" << endl; break;
 	}
-	if (errflag == 2)
-	{
-		cout << "WARN:overflow! char a returned to z!" << endl;
-	}
-	if (errflag == 3)
-	{
-		cout << "WARN:overflow! char Z returned to A!" << endl;
-	}
-	if (errflag == 4)
-	{
-		cout << "WARN:overflow! char A returned to Z!" << endl;
-	}
+
 	SetConsoleOutputCP(936);								//设置回来防止中文出现乱码
 	return 0;
 }
